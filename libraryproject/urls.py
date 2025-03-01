@@ -20,10 +20,23 @@ import apps.bookmodule.views
 from apps.bookmodule import views
 
 
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('books/', views.index, name='index'),
-    path('books/index2/<str:val1>/', views.index2, name='index2'),
-    path('books/viewbook/<int:bookId>/', views.viewbook, name='viewbook'),
+    # path('admin/', admin.site.urls),
+    # path('books/', include("apps.bookmodule.urls")),
+    # path('users/', include("apps.usermodule.urls")),
+    # path('list_books/', views.list_books, name= "books.list_books"),
+    # path('', views.index, name='books.index'),
+    # path('aboutus/', views.aboutus, name='books.aboutus'), 
+    # path('', views.index, name= "books.index"),
+    # path('list_books/', views.list_books, name= "books.list_books"),
+    # path('<int:bookId>/', views.viewbook, name="books.view_one_book"),
+    # path('aboutus/', views.aboutus, name="books.aboutus"),
+    path('', views.index, name="bookmodule.index"),  #----------------
+    path('list_books/', views.list_books, name="bookmodule.list_books"),
+    path('aboutus/', views.aboutus, name="bookmodule.aboutus"),
+    path('<int:bookId>/', views.viewbook, name="bookmodule.view_one_book"),
+    path('books/', include('apps.bookmodule.urls')),  # Ensure this matches the app's path
+
 ]
 
