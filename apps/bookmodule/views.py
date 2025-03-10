@@ -37,6 +37,11 @@ from django.http import HttpResponse
 # def aboutus(request):
 #    return render(request, 'bookmodule/aboutus.html')
 
+
+def home(request):
+   return HttpResponse("<h1>Welcome to the Library Project</h1><p>Go to <a href='/books/html5/links/'>Links Page</a></p>")
+
+
 def index(request):
    return render(request, "bookmodule/index.html")
 
@@ -51,5 +56,38 @@ def viewbook(request, bookId):
 
 
 
-#def root_redirect(request):
-   #return redirect('index') 
+def search(request):
+   if request.method == "POST":
+      string = request.POST.get('keyword').lower()
+      isTitle = request.POST.get('option1')
+      isAuthor = request.POST.get('option2')
+      # now filter
+      books = __getBooksList()
+      newBooks = []
+      for item in books:
+            contained = False
+            if isTitle and string in item['title'].lower(): contained = True
+            if not contained and isAuthor and string in item['author'].lower():contained = True
+            
+            if contained: newBooks.append(item)
+      return render(request, 'bookmodule/bookList.html', {'books':newBooks})
+   return render(request, 'bookmodule/search.html')
+
+def __getBooksList():
+   book1 = {'id':12344321, 'title':'Continuous Delivery', 'author':'J.Humble and D. Farley'}
+   book2 = {'id':56788765,'title':'Reversing: Secrets of Reverse Engineering', 'author':'E. Eilam'}
+   book3 = {'id':43211234, 'title':'The Hundred-Page Machine Learning Book', 'author':'Andriy Burkov'}
+   return [book1, book2, book3]
+
+def filterbooks(request):
+# have fake books:
+   book1 = {'id':12344321,'title':'Continuous Delivery','author':'J.Humble and D. Farley'}
+   book2 = {'id':56788765,'title':'Reversing: Secrets of Reverse Engineering','author':'E. Eilam'}
+   book3 = {'id':43211234,'title':'The Hundred-Page Machine Learning Book','author':'Andriy Burkov'}
+   
+   books=[]
+   books.append(book1)
+   books.append(book2)
+   books.append(book3)
+   
+   return render(request, 'bookmodule/search.html', {})
