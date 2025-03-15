@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends "bookmodule/layouts/base.html" %}
 {% block title %} Search Results {% endblock title %}
 
 {% block content %}
@@ -14,5 +14,5 @@
     <p>No books found matching your search criteria.</p>
 {% endif %}
 
-<a href="{% url 'bookmodule.search' %}">Back to Search</a>
+<a href="{% url 'search_books' %}">Back to Search</a>
 {% endblock content %}
