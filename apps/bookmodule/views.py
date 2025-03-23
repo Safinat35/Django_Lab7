@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from apps.bookmodule.models import Book
 from .models import Book
+from django.db import models
+
 
 def index(request):
    return render(request, "bookmodule/index.html")
@@ -14,21 +16,31 @@ def aboutus(request):
 
 def viewbook(request, bookId):
    return render(request, 'bookmodule/one_book.html')
+
+from .models import Book
+
 def search_books(request):
    if request.method == "POST":
-      string = request.POST.get('keyword').lower()
-      isTitle = request.POST.get('option1')
-      isAuthor = request.POST.get('option2')
-      # now filter
-      books = __getBooksList()
-      newBooks = []
-      for item in books:
-            contained = False
-            if isTitle and string in item['title'].lower(): contained = True
-            if not contained and isAuthor and string in item['author'].lower():contained = True
-            
-            if contained: newBooks.append(item)
-      return render(request, 'bookmodule/bookList.html', {'books':newBooks})
+      keyword = request.POST.get('keyword', '').strip().lower()
+      is_title = request.POST.get('option1')
+      is_author = request.POST.get('option2')
+
+      books = Book.objects.all()
+
+      if keyword:
+            if is_title and is_author:
+               books = books.filter(
+                  models.Q(title__icontains=keyword) | models.Q(author__icontains=keyword)
+               )
+            elif is_title:
+               books = books.filter(title__icontains=keyword)
+            elif is_author:
+               books = books.filter(author__icontains=keyword)
+            else:
+               books = []
+
+      return render(request, 'bookmodule/bookList.html', {'books': books})
+
 
    return render(request, 'bookmodule/search.html')
 def __getBooksList():
